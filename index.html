@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,71 +64,81 @@
         }
         input {
             width: 100%;
+            margin: 5px 0;
             padding: 10px;
-            margin: 10px 0;
             border-radius: 5px;
-            border: 1px solid #444a55; /* Subtle border */
-            background-color: #2c2f38; /* Matching container */
+            border: 1px solid #3b4a61;
+            background-color: #364a68;
             color: #e4e4eb;
         }
         input:focus {
             outline: none;
-            border-color: #5e5c8a; /* Purple border on focus */
+            border-color: #5cb85c;
+        }
+        label {
+            margin-top: 10px;
+            display: block;
+            color: #e4e4eb;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                padding: 15px;
+                box-shadow: none;
+                border-radius: 0;
+            }
+            button {
+                font-size: 14px;
+            }
+            h1, h2 {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Setup Training Game</h1>
-        <form id="game-setup-form">
-            <label for="exercise-count">Number of Exercises</label>
-            <input type="number" id="exercise-count" placeholder="Enter number of exercises" required>
-            <button type="button" id="add-exercises">Add Exercises</button>
-
-            <div id="exercise-details"></div>
-
-            <label for="calorie-target">Target Calories</label>
-            <input type="number" id="calorie-target" placeholder="Enter target calories per player" required>
-
-            <label for="player-count">Number of Players</label>
-            <input type="number" id="player-count" placeholder="Enter number of players" required>
-            <button type="button" id="add-players">Add Players</button>
-
-            <div id="player-details"></div>
-
-            <button type="submit">Start Game</button>
-        </form>
-
+        <div id="setup-area">
+            <h1>Setup Training Game</h1>
+            <form id="game-setup-form">
+                <label for="exercise-count">Number of Exercises</label>
+                <input type="number" id="exercise-count" placeholder="Enter number of exercises" required>
+                <button type="button" id="add-exercises">Add Exercises</button>
+                <div id="exercise-details"></div>
+                <label for="calorie-target">Target Calories</label>
+                <input type="number" id="calorie-target" placeholder="Enter target calories per player" required>
+                <label for="player-count">Number of Players</label>
+                <input type="number" id="player-count" placeholder="Enter number of players" required>
+                <button type="button" id="add-players">Add Players</button>
+                <div id="player-details"></div>
+                <button type="submit">Start Game</button>
+            </form>
+        </div>
         <div id="game-area" class="hidden">
             <h2>Game in Progress</h2>
             <div id="player-list"></div>
             <button id="finish-button">Finish</button>
         </div>
-
         <div id="game-over-area" class="hidden">
             <h2>Game Over</h2>
             <button id="restart-button">Again</button>
         </div>
     </div>
-
     <script>
-        const exerciseDetails = document.getElementById('exercise-details');
-        const addExercisesButton = document.getElementById('add-exercises');
-        const playerDetails = document.getElementById('player-details');
-        const addPlayersButton = document.getElementById('add-players');
+        const setupArea = document.getElementById('setup-area');
         const gameArea = document.getElementById('game-area');
-        const playerList = document.getElementById('player-list');
-        const gameSetupForm = document.getElementById('game-setup-form');
-        const calorieTargetInput = document.getElementById('calorie-target');
-        const finishButton = document.getElementById('finish-button');
         const gameOverArea = document.getElementById('game-over-area');
+        const gameSetupForm = document.getElementById('game-setup-form');
+        const playerList = document.getElementById('player-list');
+        const addExercisesButton = document.getElementById('add-exercises');
+        const addPlayersButton = document.getElementById('add-players');
+        const finishButton = document.getElementById('finish-button');
         const restartButton = document.getElementById('restart-button');
-
-        let gameData = {
-            exercises: [],
-            players: [],
-            calorieTarget: 0
-        };
+        const calorieTargetInput = document.getElementById('calorie-target');
+        const exerciseDetails = document.getElementById('exercise-details');
+        const playerDetails = document.getElementById('player-details');
+        let gameData = { exercises: [], players: [], calorieTarget: 0 };
 
         addExercisesButton.addEventListener('click', () => {
             const count = parseInt(document.getElementById('exercise-count').value, 10);
@@ -139,14 +148,12 @@
             }
             exerciseDetails.innerHTML = '';
             for (let i = 0; i < count; i++) {
-                const div = document.createElement('div');
-                div.innerHTML = `
+                exerciseDetails.innerHTML += `
                     <label>Exercise ${i + 1}</label>
                     <input type="text" placeholder="Exercise name" data-index="${i}" class="exercise-name">
                     <input type="number" placeholder="Calories per repetition" data-index="${i}" class="exercise-calories">
                     <input type="number" placeholder="Repetitions" data-index="${i}" class="exercise-reps">
                 `;
-                exerciseDetails.appendChild(div);
             }
         });
 
@@ -158,12 +165,10 @@
             }
             playerDetails.innerHTML = '';
             for (let i = 0; i < count; i++) {
-                const div = document.createElement('div');
-                div.innerHTML = `
+                playerDetails.innerHTML += `
                     <label>Player ${i + 1}</label>
                     <input type="text" placeholder="Player name" data-index="${i}" class="player-name">
                 `;
-                playerDetails.appendChild(div);
             }
         });
 
@@ -184,13 +189,13 @@
                 alert('Enter a valid target calorie amount.');
                 return;
             }
+            setupArea.classList.add('hidden');
             gameArea.classList.remove('hidden');
             updatePlayerList();
         });
 
         finishButton.addEventListener('click', () => {
             alert('Game Finished by Admin!');
-            displayFinalResults();
         });
 
         restartButton.addEventListener('click', () => {
@@ -202,61 +207,12 @@
             gameData.players.forEach((player, index) => {
                 const playerDiv = document.createElement('div');
                 playerDiv.innerHTML = `
-                    <button class="${player.completed ? 'completed' : ''}" onclick="chooseExercise(${index})">
+                    <button onclick="chooseExercise(${index})">
                         ${player.name}: ${player.caloriesBurned} / ${gameData.calorieTarget} calories
-                        ${player.completed ? ' - Goal Reached!' : ''}
                     </button>
                 `;
                 playerList.appendChild(playerDiv);
             });
-            checkGameCompletion();
-        }
-
-        function chooseExercise(playerIndex) {
-            const player = gameData.players[playerIndex];
-            if (player.completed) {
-                alert(`${player.name} has already reached the target calories!`);
-                return;
-            }
-            playerList.innerHTML = `<h3>${player.name}, choose an exercise:</h3>`;
-            gameData.exercises.forEach((exercise, index) => {
-                const button = document.createElement('button');
-                button.textContent = `${exercise.name}`;
-                button.onclick = () => inputRepetitions(playerIndex, index);
-                playerList.appendChild(button);
-            });
-        }
-
-        function inputRepetitions(playerIndex, exerciseIndex) {
-            const repetitions = parseInt(prompt('Enter number of repetitions:'), 10);
-            if (isNaN(repetitions) || repetitions <= 0) {
-                alert('Enter a valid number of repetitions.');
-                return;
-            }
-            const exercise = gameData.exercises[exerciseIndex];
-            const caloriesGained = Math.floor(repetitions / exercise.reps) * exercise.calories;
-            const player = gameData.players[playerIndex];
-            player.caloriesBurned += caloriesGained;
-            alert(`${player.name} burned ${caloriesGained} calories!`);
-            if (player.caloriesBurned >= gameData.calorieTarget) {
-                player.completed = true;
-                alert(`${player.name} has reached the target calories!`);
-            }
-            updatePlayerList();
-        }
-
-        function checkGameCompletion() {
-            const allCompleted = gameData.players.every(player => player.completed);
-            if (allCompleted) {
-                alert('All players have reached the target calories! Game Over!');
-                gameArea.classList.add('hidden');
-                gameOverArea.classList.remove('hidden');
-            }
-        }
-
-        function displayFinalResults() {
-            gameOverArea.classList.remove('hidden');
-            gameArea.classList.add('hidden');
         }
     </script>
 </body>
