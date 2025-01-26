@@ -94,11 +94,26 @@
                 font-size: 18px;
             }
         }
+        #open-browser {
+            background-color: #007bff; /* Blue button */
+            color: white;
+            font-size: 14px;
+            padding: 10px;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Setup Training Game</h1>
+        <h1>Sports Training Game</h1>
+        <p>For the best experience, open this game in your browser.</p>
+        <a href="https://yourgamepage.com" id="open-browser" target="_blank">Open in Browser</a>
+
         <form id="game-setup-form">
             <label for="exercise-count">Number of Exercises</label>
             <input type="number" id="exercise-count" placeholder="Enter number of exercises" required>
@@ -131,6 +146,11 @@
     </div>
 
     <script>
+        const isTelegramWebView = navigator.userAgent.includes('Telegram');
+        if (isTelegramWebView) {
+            alert('You are in Telegram WebView. For the best experience, open this game in your browser.');
+        }
+
         const exerciseDetails = document.getElementById('exercise-details');
         const addExercisesButton = document.getElementById('add-exercises');
         const playerDetails = document.getElementById('player-details');
