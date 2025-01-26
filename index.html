@@ -211,12 +211,45 @@
             gameData.players.forEach((player, index) => {
                 const playerDiv = document.createElement('div');
                 playerDiv.innerHTML = `
-                    <button onclick="chooseExercise(${index})">
+                    <button class="choose-exercise" data-player-index="${index}">
                         ${player.name}: ${player.caloriesBurned} / ${gameData.calorieTarget} calories
                     </button>
                 `;
                 playerList.appendChild(playerDiv);
             });
+        }
+
+        document.addEventListener('click', (event) => {
+            if (event.target.classList.contains('choose-exercise')) {
+                const playerIndex = event.target.dataset.playerIndex;
+                chooseExercise(playerIndex);
+            }
+        });
+
+        function chooseExercise(playerIndex) {
+            const player = gameData.players[playerIndex];
+            const exerciseButtons = gameData.exercises.map((exercise, index) => {
+                return `<button onclick="completeExercise(${playerIndex}, ${index})">${exercise.name}</button>`;
+            }).join('');
+
+            playerList.innerHTML = `<h3>${player.name}, choose an exercise:</h3>${exerciseButtons}`;
+        }
+
+        function completeExercise(playerIndex, exerciseIndex) {
+            const exercise = gameData.exercises[exerciseIndex];
+            const reps = parseInt(prompt(`Enter repetitions for ${exercise.name}:`), 10);
+            if (isNaN(reps) || reps <= 0) {
+                alert('Enter a valid number of repetitions.');
+                return;
+            }
+            const caloriesBurned = Math.floor(reps / exercise.reps) * exercise.calories;
+            gameData.players[playerIndex].caloriesBurned += caloriesBurned;
+
+            if (gameData.players[playerIndex].caloriesBurned >= gameData.calorieTarget) {
+                gameData.players[playerIndex].completed = true;
+            }
+
+            updatePlayerList();
         }
     </script>
 </body>
