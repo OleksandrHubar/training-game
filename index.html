@@ -1,301 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
     <title>Sports Training Game</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            background-color: #1c1f26; /* Dark gray */
-            font-size: 16px; /* Ensure minimum font size */
-            overflow-y: auto; /* Allow vertical scrolling */
-        }
-        .container {
-            width: 90%;
-            max-width: 500px;
-            padding: 20px;
-            border-radius: 10px;
-            background: #2c2f38; /* Dark gray for container */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            color: #e4e4eb; /* Light gray for text */
-        }
-        button {
-            margin: 10px 0;
-            padding: 10px;
-            font-size: 16px;
-            width: 100%;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        button:hover {
-            transform: translateY(-2px);
-        }
-        #finish-button {
-            background-color: #d9534f; /* Red for finish */
-            color: white;
-        }
-        #finish-button:hover {
-            background-color: #c9302c; /* Darker red for hover */
-        }
-        #restart-button {
-            background-color: #5cb85c; /* Green for again */
-            color: white;
-        }
-        #restart-button:hover {
-            background-color: #4cae4c; /* Darker green for hover */
-        }
-        .completed {
-            color: #9370db; /* Light purple for completed players */
-            font-weight: bold;
-        }
-        .hidden {
-            display: none;
-        }
-        h1, h2 {
-            text-align: center;
-            color: #b0b0c0; /* Muted light color for headings */
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid #444a55; /* Subtle border */
-            background-color: #2c2f38; /* Matching container */
-            color: #e4e4eb;
-            font-size: 16px; /* Avoid zoom on mobile */
-            box-sizing: border-box; /* Ensure proper padding */
-        }
-        input:focus {
-            outline: none;
-            border-color: #5e5c8a; /* Purple border on focus */
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                width: 100%;
-                padding: 15px;
-                box-shadow: none;
-                border-radius: 0;
-            }
-            button {
-                font-size: 14px;
-            }
-            h1, h2 {
-                font-size: 18px;
-            }
-        }
-        #open-browser {
-            background-color: #007bff; /* Blue button */
-            color: white;
-            font-size: 14px;
-            padding: 10px;
-            text-align: center;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            display: inline-block;
-            text-decoration: none;
-        }
-    </style>
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
     <div class="container">
-        <h1>Sports Training Game</h1>
-        <p>For the best experience, open this game in your browser.</p>
-        <a href="https://yourgamepage.com" id="open-browser" target="_blank">Open in Browser</a>
+      <h1>Sports Training Game</h1>
+      <p>For the best experience, open this game in your browser.</p>
+      <a href="https://yourgamepage.com" id="open-browser" target="_blank">Open in Browser</a>
 
-        <form id="game-setup-form">
-            <label for="exercise-count">Number of Exercises</label>
-            <input type="number" id="exercise-count" placeholder="Enter number of exercises" required>
-            <button type="button" id="add-exercises">Add Exercises</button>
+      <form id="game-setup-form">
+        <label for="exercise-count">Number of Exercises</label>
+        <input type="number" id="exercise-count" placeholder="Enter number of exercises" required />
+        <button type="button" id="add-exercises">Add Exercises</button>
+        <div id="exercise-details"></div>
 
-            <div id="exercise-details"></div>
+        <label for="calorie-target">Target Calories 
+          <button type="button" class="edit-btn" id="edit-global-calories">✏️</button>
+        </label>
+        <input type="number" id="calorie-target" placeholder="Enter target calories per player" required />
 
-            <label for="calorie-target">Target Calories</label>
-            <input type="number" id="calorie-target" placeholder="Enter target calories per player" required>
+        <label for="player-count">Number of Players</label>
+        <input type="number" id="player-count" placeholder="Enter number of players" required />
+        <button type="button" id="add-players">Add Players</button>
+        <div id="player-details"></div>
 
-            <label for="player-count">Number of Players</label>
-            <input type="number" id="player-count" placeholder="Enter number of players" required>
-            <button type="button" id="add-players">Add Players</button>
+        <button type="submit">Start Game</button>
+      </form>
 
-            <div id="player-details"></div>
+      <div id="game-area" class="hidden">
+        <h2>Game in Progress</h2>
+        <div id="player-list"></div>
+        <button id="finish-button">Finish</button>
+      </div>
 
-            <button type="submit">Start Game</button>
-        </form>
-
-        <div id="game-area" class="hidden">
-            <h2>Game in Progress</h2>
-            <div id="player-list"></div>
-            <button id="finish-button">Finish</button>
-        </div>
-
-        <div id="game-over-area" class="hidden">
-            <h2>Game Over</h2>
-            <button id="restart-button">Again</button>
-        </div>
+      <div id="game-over-area" class="hidden">
+        <h2>Game Over</h2>
+        <button id="restart-button">Again</button>
+      </div>
     </div>
 
-    <script>
-        const isTelegramWebView = navigator.userAgent.includes('Telegram');
-        if (isTelegramWebView) {
-            alert('You are in Telegram WebView. For the best experience, open this game in your browser.');
-        }
-
-        const exerciseDetails = document.getElementById('exercise-details');
-        const addExercisesButton = document.getElementById('add-exercises');
-        const playerDetails = document.getElementById('player-details');
-        const addPlayersButton = document.getElementById('add-players');
-        const gameArea = document.getElementById('game-area');
-        const playerList = document.getElementById('player-list');
-        const gameSetupForm = document.getElementById('game-setup-form');
-        const calorieTargetInput = document.getElementById('calorie-target');
-        const finishButton = document.getElementById('finish-button');
-        const gameOverArea = document.getElementById('game-over-area');
-        const restartButton = document.getElementById('restart-button');
-
-        let gameData = {
-            exercises: [],
-            players: [],
-            calorieTarget: 0
-        };
-
-        addExercisesButton.addEventListener('click', () => {
-            const count = parseInt(document.getElementById('exercise-count').value, 10);
-            if (isNaN(count) || count <= 0) {
-                alert('Enter a valid number of exercises.');
-                return;
-            }
-            exerciseDetails.innerHTML = '';
-            for (let i = 0; i < count; i++) {
-                const div = document.createElement('div');
-                div.innerHTML = `
-                    <label>Exercise ${i + 1}</label>
-                    <input type="text" placeholder="Exercise name" data-index="${i}" class="exercise-name">
-                    <input type="number" placeholder="Calories per repetition" data-index="${i}" class="exercise-calories">
-                    <input type="number" placeholder="Repetitions" data-index="${i}" class="exercise-reps">
-                `;
-                exerciseDetails.appendChild(div);
-            }
-        });
-
-        addPlayersButton.addEventListener('click', () => {
-            const count = parseInt(document.getElementById('player-count').value, 10);
-            if (isNaN(count) || count <= 0) {
-                alert('Enter a valid number of players.');
-                return;
-            }
-            playerDetails.innerHTML = '';
-            for (let i = 0; i < count; i++) {
-                const div = document.createElement('div');
-                div.innerHTML = `
-                    <label>Player ${i + 1}</label>
-                    <input type="text" placeholder="Player name" data-index="${i}" class="player-name">
-                `;
-                playerDetails.appendChild(div);
-            }
-        });
-
-        gameSetupForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            gameData.exercises = Array.from(document.querySelectorAll('.exercise-name')).map((input, index) => ({
-                name: input.value,
-                calories: parseInt(document.querySelector(`.exercise-calories[data-index="${index}"]`).value, 10),
-                reps: parseInt(document.querySelector(`.exercise-reps[data-index="${index}"]`).value, 10)
-            }));
-            gameData.players = Array.from(document.querySelectorAll('.player-name')).map(input => ({
-                name: input.value,
-                caloriesBurned: 0,
-                completed: false
-            }));
-            gameData.calorieTarget = parseInt(calorieTargetInput.value, 10);
-            if (isNaN(gameData.calorieTarget) || gameData.calorieTarget <= 0) {
-                alert('Enter a valid target calorie amount.');
-                return;
-            }
-            gameArea.classList.remove('hidden');
-            updatePlayerList();
-        });
-
-        finishButton.addEventListener('click', () => {
-            alert('Game Finished by Admin!');
-            displayFinalResults();
-        });
-
-        restartButton.addEventListener('click', () => {
-            location.reload();
-        });
-
-        function updatePlayerList() {
-            playerList.innerHTML = '';
-            gameData.players.forEach((player, index) => {
-                const playerDiv = document.createElement('div');
-                playerDiv.innerHTML = `
-                    <button class="${player.completed ? 'completed' : ''}" onclick="chooseExercise(${index})">
-                        ${player.name}: ${player.caloriesBurned} / ${gameData.calorieTarget} calories
-                        ${player.completed ? ' - Goal Reached!' : ''}
-                    </button>
-                `;
-                playerList.appendChild(playerDiv);
-            });
-            checkGameCompletion();
-        }
-
-        function chooseExercise(playerIndex) {
-            const player = gameData.players[playerIndex];
-            if (player.completed) {
-                alert(`${player.name} has already reached the target calories!`);
-                return;
-            }
-            playerList.innerHTML = `<h3>${player.name}, choose an exercise:</h3>`;
-            gameData.exercises.forEach((exercise, index) => {
-                const button = document.createElement('button');
-                button.textContent = `${exercise.name}`;
-                button.onclick = () => inputRepetitions(playerIndex, index);
-                playerList.appendChild(button);
-            });
-        }
-
-        function inputRepetitions(playerIndex, exerciseIndex) {
-            const repetitions = parseInt(prompt('Enter number of repetitions:'), 10);
-            if (isNaN(repetitions) || repetitions <= 0) {
-                alert('Enter a valid number of repetitions.');
-                return;
-            }
-            const exercise = gameData.exercises[exerciseIndex];
-            const caloriesGained = Math.floor(repetitions / exercise.reps) * exercise.calories;
-            const player = gameData.players[playerIndex];
-            player.caloriesBurned += caloriesGained;
-            alert(`${player.name} burned ${caloriesGained} calories!`);
-            if (player.caloriesBurned >= gameData.calorieTarget) {
-                player.completed = true;
-                alert(`${player.name} has reached the target calories!`);
-            }
-            updatePlayerList();
-        }
-
-        function checkGameCompletion() {
-            const allCompleted = gameData.players.every(player => player.completed);
-            if (allCompleted) {
-                alert('All players have reached the target calories! Game Over!');
-                gameArea.classList.add('hidden');
-                gameOverArea.classList.remove('hidden');
-            }
-        }
-
-        function displayFinalResults() {
-            gameOverArea.classList.remove('hidden');
-            gameArea.classList.add('hidden');
-        }
-    </script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
