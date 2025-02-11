@@ -105,12 +105,16 @@ document.addEventListener("DOMContentLoaded", function () {
       let exerciseButtons = gameData.exercises.map((exercise, i) => 
           `<button onclick="recordExercise(${playerIndex}, ${i})">${exercise.name} (${exercise.reps} reps = ${exercise.calories} cal)</button>`
       ).join("");
-
+  
       playerList.innerHTML = `
           <h3>${player.name}'s Turn</h3>
           ${exerciseButtons}
-          <button onclick="updatePlayerList()">Cancel</button>
+          <button onclick="cancelSelection()">Cancel</button>
       `;
+  };
+
+  window.cancelSelection = function () {
+    updatePlayerList(); // повертає список гравців
   };
 
   // Запис вправи та підрахунок калорій з урахуванням неповної кількості повторів
